@@ -1,0 +1,96 @@
+:root {
+  --bg: #1e1e1e;
+  --bg-2: #252526;
+  --bg-3: #2d2d30;
+  --border: #3c3c3c;
+  --text: #d4d4d4;
+  --muted: #8a8a8a;
+  --accent: #4fc1ff;
+  --splitter: 5px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font-size: 13px; overflow: hidden; }
+
+.app { display: flex; flex-direction: column; height: 100%; }
+
+/* Barra superior */
+.topbar {
+  display: flex; align-items: center; gap: 16px;
+  height: 36px; padding: 0 12px;
+  background: var(--bg-3); border-bottom: 1px solid var(--border);
+  flex: none;
+}
+.brand { font-weight: 600; letter-spacing: .2px; }
+.topbar-item { color: var(--text); }
+.muted { color: var(--muted); }
+.spacer { flex: 1; }
+
+.btn, .segmented button, .icon-btn {
+  background: transparent; color: var(--text);
+  border: 1px solid transparent; border-radius: 4px; cursor: pointer; font: inherit;
+}
+.btn { border-color: var(--border); padding: 3px 10px; }
+.btn:hover, .icon-btn:hover, .segmented button:hover { background: #3a3a3d; }
+.icon-btn { padding: 1px 6px; line-height: 1.4; }
+
+.segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.segmented button { border: 0; border-radius: 0; padding: 3px 10px; color: var(--muted); }
+.segmented button.on { background: #094771; color: #fff; }
+
+/* Área de trabalho e divisórias */
+.workspace { flex: 1; min-height: 0; }
+.split { display: flex; width: 100%; height: 100%; }
+.split-row { flex-direction: row; }
+.split-column { flex-direction: column; }
+.split-item { min-width: 0; min-height: 0; overflow: hidden; }
+
+.splitter { flex: none; background: var(--border); transition: background .12s; z-index: 2; touch-action: none; }
+.splitter-row { width: var(--splitter); cursor: col-resize; }
+.splitter-column { height: var(--splitter); cursor: row-resize; }
+.splitter:hover, .splitter:active { background: var(--accent); }
+
+/* Painéis */
+.panel { display: flex; flex-direction: column; height: 100%; background: var(--bg); }
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 30px; padding: 0 8px; flex: none;
+  background: var(--bg-2); border-bottom: 1px solid var(--border);
+}
+.panel-title { text-transform: uppercase; font-size: 11px; letter-spacing: .6px; color: var(--muted); }
+.panel-actions { display: flex; align-items: center; gap: 4px; }
+.panel-body { flex: 1; min-height: 0; }
+
+/* Editor */
+.editor-pane { display: flex; flex-direction: column; height: 100%; }
+.tabs { display: flex; height: 32px; background: var(--bg-2); flex: none; }
+.tab { padding: 0 14px; display: flex; align-items: center; color: var(--muted); border-right: 1px solid var(--border); }
+.tab.active { background: var(--bg); color: var(--text); border-top: 1px solid var(--accent); }
+.editor-host { flex: 1; min-height: 0; }
+
+/* Placeholders honestos */
+.placeholder { padding: 12px; color: var(--muted); height: 100%; background: #181818; }
+.placeholder strong { color: var(--text); }
+.placeholder p { margin: 6px 0 0; }
+
+/* Professora */
+.teacher { display: flex; flex-direction: column; height: 100%; }
+.teacher-history { flex: 1; overflow: auto; padding: 12px; }
+.notice { background: var(--bg-3); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 4px; color: var(--muted); line-height: 1.5; }
+.teacher-input { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--border); }
+.teacher-input textarea {
+  flex: 1; resize: none; background: var(--bg-3); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px; padding: 8px; font: inherit;
+}
+.teacher-input button {
+  align-self: flex-end; padding: 6px 14px; border-radius: 4px; border: 0;
+  background: #0e639c; color: #fff; font: inherit;
+}
+.teacher-input textarea:disabled, .teacher-input button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Preview */
+.preview { height: 100%; background: #2a2a2a; display: flex; justify-content: center; overflow: auto; }
+.preview-frame { height: 100%; max-width: 100%; border: 0; background: #fff; transition: width .15s; }
