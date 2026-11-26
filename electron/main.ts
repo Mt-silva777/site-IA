@@ -1,5 +1,6 @@
 import { app, BrowserWindow, session, shell } from 'electron'
 import path from 'node:path'
+import { registerIpc } from './ipc'
 
 const DEV_URL = process.env.VITE_DEV_SERVER_URL // definido por scripts/dev.mjs
 const isDev = !!DEV_URL
@@ -50,6 +51,7 @@ app.whenReady().then(() => {
       })
     })
   }
+  registerIpc(DEV_URL)
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
