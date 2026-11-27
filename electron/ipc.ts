@@ -1,5 +1,7 @@
 import { BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron'
+import { shell } from 'electron'
 import * as fsService from './fsService'
+import * as preview from './previewService'
 
 type Result<T> = { ok: true; data: T } | { ok: false; error: string }
 
@@ -47,6 +49,19 @@ export function registerIpc(devUrl: string | undefined): void {
     await fsService.setRoot(r.filePaths[0])
     await fsService.scaffoldIfEmpty()
     return { canceled: false as const, name: fsService.projectName()! }
+  })
+
+  handle('preview:start', async () => {
+    const root = fsService.getRoot()
+    if (!root) throw new Error('Nenhum projeto aberto.')
+    return preview.startPreview(root)
+  })
+  handle('preview:stop', async () => preview.stopPreview())
+  handle('preview:openExternal', async (_e, url: unknown) => {
+    const base = preview.previewUrl()
+    // Só abre URLs do próprio servidor de preview (nunca endereços arbitrários).
+    if (typeof url !== 'string' || !base || !(url === base || url.startsWith(base + '/'))) throw new Error('URL não autorizada.')
+    await shell.openExternal(url)
   })
 
   handle('project:tree', async () => fsService.listTree())

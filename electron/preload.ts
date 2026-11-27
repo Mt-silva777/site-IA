@@ -11,6 +11,11 @@ contextBridge.exposeInMainWorld('codementor', {
     create: () => call('project:create'),
     tree: () => call('project:tree'),
   },
+  preview: {
+    start: () => call('preview:start'),
+    stop: () => call('preview:stop'),
+    openExternal: (url: string) => call('preview:openExternal', url),
+  },
   fs: {
     read: (p: string) => call('fs:read', p),
     write: (p: string, content: string) => call('fs:write', p, content),

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, session, shell } from 'electron'
 import path from 'node:path'
 import { registerIpc } from './ipc'
+import { stopPreview } from './previewService'
 
 const DEV_URL = process.env.VITE_DEV_SERVER_URL // definido por scripts/dev.mjs
 const isDev = !!DEV_URL
@@ -56,6 +57,10 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+})
+
+app.on('before-quit', () => {
+  void stopPreview()
 })
 
 app.on('window-all-closed', () => {

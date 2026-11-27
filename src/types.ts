@@ -16,6 +16,11 @@ export interface CodementorApi {
     create(): Promise<Result<OpenResult>>
     tree(): Promise<Result<TreeNode[]>>
   }
+  preview: {
+    start(): Promise<Result<{ url: string }>>
+    stop(): Promise<Result<void>>
+    openExternal(url: string): Promise<Result<void>>
+  }
   fs: {
     read(path: string): Promise<Result<{ binary: boolean; content: string }>>
     write(path: string, content: string): Promise<Result<void>>

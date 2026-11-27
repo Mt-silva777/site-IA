@@ -7,6 +7,7 @@ import { Explorer } from './components/Explorer'
 import { TerminalPane } from './components/TerminalPane'
 import { TeacherPane } from './components/TeacherPane'
 import { PreviewPane, PreviewToolbar, usePreviewDevice } from './components/PreviewPane'
+import { usePreview } from './preview/usePreview'
 import { useProject } from './project/useProject'
 
 const PANEL_LABELS: Record<PanelId, string> = {
@@ -21,6 +22,9 @@ export default function App() {
   const { layout, toggleHidden, toggleMaximize, setWeights, setVertical, reset } = useLayout()
   const [device, setDevice] = usePreviewDevice()
   const project = useProject()
+  const preview = usePreview(project.projectName)
+  const [reloadKey, setReloadKey] = useState(0)
+  const htmlPath = project.activePath && /\.html?$/i.test(project.activePath) ? project.activePath : null
   const [explorerWeights, setExplorerWeights] = useState<Record<string, number>>({ explorer: 0.24, editor: 0.76 })
   const [explorerVisible, setExplorerVisible] = useState(true)
 
@@ -81,9 +85,17 @@ export default function App() {
     <PanelFrame
       title="Preview"
       {...frameProps('right')}
-      actions={<PreviewToolbar device={device} setDevice={setDevice} />}
+      actions={
+        <PreviewToolbar
+          device={device}
+          setDevice={setDevice}
+          canUse={preview.status === 'running'}
+          onReload={() => setReloadKey((k) => k + 1)}
+          onExternal={() => preview.url && preview.openExternal(preview.url + '/' + (htmlPath && htmlPath !== 'index.html' ? encodeURI(htmlPath) : ''))}
+        />
+      }
     >
-      <PreviewPane device={device} />
+      <PreviewPane device={device} status={preview.status} url={preview.url} serverError={preview.serverError} htmlPath={htmlPath} reloadKey={reloadKey} hasProject={!!project.projectName} />
     </PanelFrame>
   )
 
@@ -105,7 +117,7 @@ export default function App() {
         {project.projectName && (
           <span className={`topbar-item ${project.saveState === 'saved' ? 'muted' : ''}`}>{SAVE_LABEL[project.saveState]}</span>
         )}
-        <span className="topbar-item muted">Servidor: parado</span>
+        <span className={`topbar-item ${preview.status === 'running' ? '' : 'muted'}`}>Servidor: {{ idle: 'parado', starting: 'iniciando…', running: 'ativo', error: 'erro' }[preview.status]}</span>
         <span className="topbar-item muted">IA: não configurada</span>
         <button className="btn" onClick={project.openProject}>Abrir projeto</button>
         <button className="btn" onClick={project.createProject}>Novo projeto</button>

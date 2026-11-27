@@ -42,6 +42,10 @@ export function friendlyError(err: unknown): string {
   }
 }
 
+export function getRoot(): string | null {
+  return root
+}
+
 export function projectName(): string | null {
   return root ? path.basename(root) : null
 }
